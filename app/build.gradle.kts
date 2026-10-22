@@ -22,6 +22,14 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+    // 1. Сам Javalin (укажите актуальную версию, например, 6.x)
+    implementation("io.javalin:javalin:6.3.0")
+
+    // 2. Логгер (обязателен, иначе Javalin выдаст предупреждение и не запустится)
+    implementation("org.slf4j:slf4j-simple:2.0.13")
+
+    // 3. Jackson (нужен для метода ctx.json(), чтобы автоматически сериализовать объекты в JSON)
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

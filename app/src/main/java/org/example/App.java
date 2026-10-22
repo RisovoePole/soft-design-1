@@ -3,13 +3,77 @@
  */
 package org.example;
 
+import io.javalin.Javalin;
+import org.example.*;
+
 public class App {
 
-    public String getGreeting() {
-        return "Hello World!";
+    public static String printEntityByMask(
+        Entity entityVictor,
+        EntityMask mask
+    ) {
+        StringBuilder result = new StringBuilder();
+        if (mask.age) {
+            result.append(
+                "age: ".concat(Integer.toString(entityVictor.age)) + "\n"
+            );
+        }
+        if (mask.name) {
+            result.append("name: " + entityVictor.name + "\n");
+        }
+        if (mask.weight) {
+            result.append("weight: " + entityVictor.weight + "\n");
+        }
+        if (mask.state) {
+            result.append("state: " + entityVictor.state + "\n");
+        }
+        return result.toString();
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        // UNCOMMENT FOR open JSON REST API - https://localhost:7000/hello?mask={some number}
+        // var app = Javalin.create().start(7000);
+
+        // app.get("/hello", ctx -> {
+        //     int maskValue = ctx
+        //         .queryParamAsClass("mask", Integer.class)
+        //         .getOrDefault(0);
+
+        //     EntityMask mask = new EntityMask(maskValue);
+
+        //     ctx.json(
+        //         printEntityByMask(
+        //             new Entity(20, "victor", 80.3f, EntityState.CODE),
+        //             mask
+        //         )
+        //     );
+        // });
+
+        Entity entityVictor = new Entity(20, "victor", 80.3f, EntityState.CODE);
+        Entity entitySanya = new Entity(21, "sanya", 75.4f, EntityState.CODE);
+        EntityRepo repo = new EntityRepo();
+        repo.addEntity(entityVictor);
+        repo.addEntity(entitySanya);
+
+        EntityMask mask = new EntityMask(15);
+
+        for (Entity e : repo.findByMask(
+            new EntityMask(EntityMask.STATE),
+            new Entity(0, null, 0, EntityState.CODE)
+        )) {
+            System.out.println(printEntityByMask(e, mask));
+            System.out.println("\n---\n");
+        }
+
+        repo.copyDataFromEntity(
+            new EntityMask(EntityMask.NAME),
+            new EntityMask(EntityMask.STATE),
+            entityVictor
+        );
+        System.out.println("===========changed list:");
+        for (Entity e : repo.getAllList()) {
+            System.out.println(printEntityByMask(e, mask));
+            System.out.println("\n---\n");
+        }
     }
 }

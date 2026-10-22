@@ -21,8 +21,7 @@
           ];
 
           shellHook = ''
-            export JAVA_HOME=${pkgs.jdk21}
-            export PATH="${pkgs.jdt-language-server}/bin:$PATH"
+            export JAVA_HOME=${pkgs.jdk21}/lib/openjdk            export PATH="${pkgs.jdt-language-server}/bin:$PATH"
             echo "Java dev shell loaded: $(java -version 2>&1 | head -n 1)"
           '';
         };
